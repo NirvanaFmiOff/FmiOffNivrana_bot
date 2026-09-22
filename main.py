@@ -268,7 +268,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
             "💻 ¡Hola, querido colega unlocker! 📱\n\n"
             "Al ser un canal privado de alta seguridad y exclusividad, te compartimos el enlace directo para que tus compañeros y colegas de todo el mundo puedan ingresar, sumarse y formar parte de esta gran comunidad de trabajo:\n\n"
             "🔗 **Link de Acceso Exclusivo:**\n"
-            "https://t.me/+U99kMTOYIGYxNGQ5\n\n"
+            "https://t.me/+oGhtE4RKVyE5MzVh\n\n"
             "⚡ *¡Te esperamos adentro para seguir destrabando límites sin escalas!* 🚀🛠️"
         )
         keyboard_volver = [[InlineKeyboardButton("⬅️ Volver al Menú", callback_data="menu_principal")]]
