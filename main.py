@@ -29,7 +29,7 @@ def home():
     return "¡El Bot Nirvana Infinito está activo y funcionando 24/7!"
 
 def run_web():
-    app_web.run(host="0.0.0.0", port=8080)
+    app_web.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
 
 def keep_alive():
     t = Thread(target=run_web)
