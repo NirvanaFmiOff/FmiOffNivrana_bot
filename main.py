@@ -40,12 +40,15 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     keyboard = [
         [InlineKeyboardButton("📋 Catálogo Ilimitado", callback_data="menu_catalogo")],
         [InlineKeyboardButton("📱 Android & Xiaomi (FRP/Mi)", callback_data="serv_android")],
+        [
+            InlineKeyboardButton("📱 Motorola Reparar IMEI", callback_data="serv_moto_imei"),
+            InlineKeyboardButton("📱 Samsung", callback_data="serv_samsung")
+        ],
         [InlineKeyboardButton("💳 Métodos de Pago", callback_data="menu_pagos")],
         [
-            InlineKeyboardButton("👑 Soporte Nirvana", url="https://t.me/NirvanaFmiOff"),
-            InlineKeyboardButton("🛠️ Soporte Fernando", url="https://t.me/Fernando5656")
+            InlineKeyboardButton("👑 Soporte Oficial", url="https://t.me/AstroUnlock"),
+            InlineKeyboardButton("📢 Canal Privado", callback_data="enlace_canal")
         ],
-        [InlineKeyboardButton("📢 Unirse al Canal Privado", callback_data="enlace_canal")],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
@@ -107,8 +110,7 @@ async def menu_pagos(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
 
     keyboard = [
         [
-            InlineKeyboardButton("👑 Soporte Nirvana", url="https://t.me/NirvanaFmiOff"),
-            InlineKeyboardButton("🛠️ Soporte Fernando", url="https://t.me/Fernando5656")
+            InlineKeyboardButton("👑 Enviar Comprobante / Soporte", url="https://t.me/AstroUnlock")
         ],
         [InlineKeyboardButton("⬅️ Volver", callback_data="menu_principal")]
     ]
@@ -116,11 +118,15 @@ async def menu_pagos(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
 
     texto = (
         "💳 **MÉTODOS DE PAGO Y SOPORTE**\n\n"
-        "• **💵 Medios aceptados:** Mercado Pago / Cripto (USDT)\n\n"
+        "Medios de pago aceptados:\n"
+        "• 🇨🇱 **Pesos chilenos**\n"
+        "• 🇵🇪 **Soles peruanos**\n"
+        "• 🇦🇷 **Pesos argentinos**\n"
+        "• 💲 **USDT (Cripto)**\n"
+        "• 🇲🇽 **Pesos mexicanos**\n\n"
         "⚠️ *Recuerda enviar siempre tu comprobante directamente al soporte una vez realizado el pago.*\n\n"
-        "👑 **Administradores Oficiales:**\n"
-        "• Soporte Principal: @NirvanaFmiOff\n"
-        "• Soporte Técnico: @Fernando5656"
+        "👑 **Atención Oficial:**\n"
+        "• Soporte y Pagos: @AstroUnlock"
     )
     await query.edit_message_text(
         texto, reply_markup=reply_markup, parse_mode="Markdown"
@@ -146,6 +152,25 @@ async def mostrar_servicio(update: Update, context: ContextTypes.DEFAULT_TYPE) -
             "• 🔒 **Lost FRP:** Soluciones especializadas para equipos bloqueados.\n\n"
             "💬 **¿Cómo avanzamos?**\n"
             "Los precios varían según el modelo y la seguridad actual de tu equipo. ¡Consúltanos indicando tu modelo exacto para darte el mejor presupuesto!"
+        )
+        boton_volver_destino = "menu_principal"
+    elif data == "serv_moto_imei":
+        detalle = (
+            "📱 **MOTOROLA - REPARACIÓN DE IMEI** 📱\n\n"
+            "Modelos soportados para reparación de IMEI:\n"
+            "• `XT2615`\n• `XT2613`\n• `XT2515`\n• `XT2513`\n"
+            "• `XT2553`\n• `XT2519`\n• `XT2453`\n• `XT2415`\n"
+            "• `XT2317`\n• `XT2311`\n• `XT2271`\n• `XT2163`\n"
+            "• `XT2165`\n• `XT2211`\n• `XT2205`\n• `XT2213`\n\n"
+            "💬 *Envía tu modelo y consulta directamente con el soporte oficial para procesarlo.*"
+        )
+        boton_volver_destino = "menu_principal"
+    elif data == "serv_samsung":
+        detalle = (
+            "📱 **SAMSUNG - SERVICIOS PRO** 📱\n\n"
+            "• 🔓 **FRP Google Account:** Todos los modelos soportados (Exynos y Qualcomm) de **raíz** y **bypass**.\n"
+            "• 🛡️ **KG Block:** Solución especializada (solo **bypass**).\n\n"
+            "💬 *Consúltanos con tu binario y modelo exacto para darte una solución inmediata.*"
         )
         boton_volver_destino = "menu_principal"
     elif data == "serv_fmi":
@@ -211,8 +236,7 @@ async def mostrar_servicio(update: Update, context: ContextTypes.DEFAULT_TYPE) -
 
     keyboard = [
         [
-            InlineKeyboardButton("🛒 Contratar Nirvana", url="https://t.me/NirvanaFmiOff"),
-            InlineKeyboardButton("🛒 Contratar Fernando", url="https://t.me/Fernando5656")
+            InlineKeyboardButton("🛒 Contratar Servicio", url="https://t.me/AstroUnlock")
         ],
         [InlineKeyboardButton(texto_boton_volver, callback_data=boton_volver_destino)],
     ]
@@ -237,8 +261,7 @@ async def handle_imei_message(update: Update, context: ContextTypes.DEFAULT_TYPE
         )
         keyboard = [
             [
-                InlineKeyboardButton("👑 Consultar Nirvana", url="https://t.me/NirvanaFmiOff"),
-                InlineKeyboardButton("🛠️ Consultar Fernando", url="https://t.me/Fernando5656")
+                InlineKeyboardButton("👑 Consultar con Soporte", url="https://t.me/AstroUnlock")
             ]
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
