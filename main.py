@@ -11,6 +11,7 @@ from telegram.ext import (
     CommandHandler,
     ContextTypes,
     MessageHandler,
+    ChatMemberHandler,
     filters,
 )
 
@@ -29,7 +30,7 @@ def home():
     return "¡El Bot Nirvana Infinito está activo y funcionando 24/7!"
 
 def run_web():
-    app_web.run(host="0.0.0.0",port=int(os.environ.get("PORT", 10000)))
+    app_web.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
 
 def keep_alive():
     t = Thread(target=run_web)
@@ -47,7 +48,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         [InlineKeyboardButton("💳 Métodos de Pago", callback_data="menu_pagos")],
         [
             InlineKeyboardButton("👑 Soporte Nirvana", url="https://t.me/NirvanaFmiOff"),
-            InlineKeyboardButton("🛠️ Soporte Astro", url="https://t.me/AstroUnlock")
+            InlineKeyboardButton("🛠️ Soporte Apple 999", url="https://t.me/soporteapple999")
         ],
         [InlineKeyboardButton("📢 Canal Privado", callback_data="enlace_canal")],
     ]
@@ -69,6 +70,40 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await query.edit_message_text(
             bienvenida_texto, reply_markup=reply_markup, parse_mode="Markdown"
         )
+
+# --- BIENVENIDA AUTOMÁTICA PARA NUEVOS USUARIOS (ENLACES DE INVITACIÓN / GRUPO) ---
+async def welcome_new_members(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    result = update.chat_member
+    if not result:
+        return
+    
+    old_status = result.old_chat_member.status
+    new_status = result.new_chat_member.status
+
+    if old_status in ["left", "kicked"] and new_status in ["member", "administrator", "restricted"]:
+        user = result.new_chat_member.user
+        nombre_usuario = user.first_name or "colega"
+        
+        bienvenida_texto = (
+            f"♾️ ¡Bienvenido/a **{nombre_usuario}** a **NIRVANA INFINITO SERVICES**! ♾️\n\n"
+            "Soluciones profesionales, herramientas y servicios sin límites.\n"
+            "Presiona el botón de abajo para iniciar el menú principal y ver todas las opciones:"
+        )
+        
+        keyboard = [
+            [InlineKeyboardButton("🚀 Abrir Menú Principal", url=f"https://t.me/{context.bot.username}?start=welcome")]
+        ]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+
+        try:
+            await context.bot.send_message(
+                chat_id=user.id,
+                text=bienvenida_texto,
+                reply_markup=reply_markup,
+                parse_mode="Markdown"
+            )
+        except Exception as e:
+            logger.info(f"No se pudo enviar el saludo al privado del usuario {user.id}: {e}")
 
 # --- MENÚ DE CATÁLOGO ---
 async def menu_catalogo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -111,7 +146,8 @@ async def menu_pagos(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
 
     keyboard = [
         [
-            InlineKeyboardButton("👑 Enviar Comprobante a Nirvana", url="https://t.me/NirvanaFmiOff")
+            InlineKeyboardButton("👑 Enviar a Nirvana", url="https://t.me/NirvanaFmiOff"),
+            InlineKeyboardButton("🛠️ Enviar a Soporte Apple 999", url="https://t.me/soporteapple999")
         ],
         [InlineKeyboardButton("⬅️ Volver", callback_data="menu_principal")]
     ]
@@ -125,9 +161,9 @@ async def menu_pagos(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
         "• 🇲🇽 **Pesos mexicanos**\n"
         "• 🇵🇪 **Soles peruanos**\n"
         "• 💲 **USDT (Cripto)**\n\n"
-        "⚠️ *Recuerda enviar siempre tu comprobante directamente a mi chat privado una vez realizado el pago.*\n\n"
-        "👑 **Administrador Oficial:**\n"
-        "• Atención de Pagos: @NirvanaFmiOff"
+        "⚠️ *Recuerda enviar siempre tu comprobante directamente al chat privado de cualquiera de los administradores una vez realizado el pago.*\n\n"
+        "👑 **Administradores Oficiales:**\n"
+        "• Atención: @NirvanaFmiOff / @soporteapple999"
     )
     await query.edit_message_text(
         texto, reply_markup=reply_markup, parse_mode="Markdown"
@@ -238,7 +274,7 @@ async def mostrar_servicio(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     keyboard = [
         [
             InlineKeyboardButton("👑 Contratar con Nirvana", url="https://t.me/NirvanaFmiOff"),
-            InlineKeyboardButton("🛠️ Contratar con Astro", url="https://t.me/AstroUnlock")
+            InlineKeyboardButton("🛠️ Contratar con Soporte 999", url="https://t.me/soporteapple999")
         ],
         [InlineKeyboardButton(texto_boton_volver, callback_data=boton_volver_destino)],
     ]
@@ -264,7 +300,7 @@ async def handle_imei_message(update: Update, context: ContextTypes.DEFAULT_TYPE
         keyboard = [
             [
                 InlineKeyboardButton("👑 Consultar con Nirvana", url="https://t.me/NirvanaFmiOff"),
-                InlineKeyboardButton("🛠️ Consultar con Astro", url="https://t.me/AstroUnlock")
+                InlineKeyboardButton("🛠️ Consultar con Soporte 999", url="https://t.me/soporteapple999")
             ]
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
@@ -317,6 +353,7 @@ def main() -> None:
 
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CallbackQueryHandler(button_handler))
+    application.add_handler(ChatMemberHandler(welcome_new_members, ChatMemberHandler.CHAT_MEMBER))
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_imei_message))
 
     logger.info("Iniciando Bot Nirvana Infinito con bucle de seguridad 24/7...")
